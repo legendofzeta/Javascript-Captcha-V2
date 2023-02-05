@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>JavaScript Captcha Example</title>
+    <style>
+      #captchaContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+      }
+
+      #captchaInput, #captchaButton {
+        margin: 10px 0;
+        padding: 10px;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="captchaContainer">
+      <p id="prompt">Please solve the captcha to view content:</p>
+      <p id="challenge"></p>
+      <input type="text" id="captchaInput">
+      <button id="captchaButton">Submit</button>
+    </div>
+
+    <div id="contentContainer" style="display: none; text-align: center; padding: 20px;">
+      <p>This is your protected content.</p>
+    </div>
+
+    <script>
+      const challenge = document.getElementById("challenge");
+      const num1 = Math.floor(Math.random() * 10) + 1;
+      const num2 = Math.floor(Math.random() * 10) + 1;
+      challenge.innerHTML = `What is ${num1} + ${num2}?`;
+
+      const correctAnswer = num1 + num2;
+
+      document.getElementById("captchaButton").addEventListener("click", function() {
+        const answer = document.getElementById("captchaInput").value;
+        if (answer == correctAnswer) {
+          document.getElementById("captchaContainer").style.display = "none";
+          document.getElementById("contentContainer").style.display = "block";
+        } else {
+          document.getElementById("prompt").innerHTML = "Incorrect answer, please try again.";
+        }
+      });
+    </script>
+  </body>
+</html>
+
