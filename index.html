@@ -32,11 +32,12 @@
 
     <script>
       const challenge = document.getElementById("challenge");
-      const num1 = Math.floor(Math.random() * 10) + 1;
-      const num2 = Math.floor(Math.random() * 10) + 1;
-      challenge.innerHTML = `What is ${num1} + ${num2}?`;
+      const num1 = Math.floor(Math.random() * 20) + 1;
+      const num2 = Math.floor(Math.random() * 20) + 1;
+      const operation = Math.floor(Math.random() * 2) == 0 ? "+" : "-";
+      challenge.innerHTML = `What is ${num1} ${operation} ${num2}?`;
 
-      const correctAnswer = num1 + num2;
+      const correctAnswer = operation == "+" ? num1 + num2 : num1 - num2;
 
       document.getElementById("captchaButton").addEventListener("click", function() {
         const answer = document.getElementById("captchaInput").value;
@@ -50,4 +51,3 @@
     </script>
   </body>
 </html>
-
