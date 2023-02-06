@@ -11,19 +11,41 @@
         padding: 20px;
       }
 
+      #prompt {
+        margin-bottom: 10px;
+        font-size: 16px;
+        text-align: center;
+      }
+
       #captchaInput, #captchaButton {
         margin: 10px 0;
         padding: 10px;
         font-size: 16px;
       }
+
+      #countdownBar {
+        margin-top: 10px;
+        width: 100%;
+        height: 20px;
+        background-color: lightgray;
+      }
+
+      #countdownProgress {
+        height: 100%;
+        background-color: blue;
+        transition: width 0.1s ease;
+      }
     </style>
   </head>
   <body>
     <div id="captchaContainer">
-      <p id="prompt">Please solve the captcha to view content:</p>
+      <p id="prompt">Please solve the captcha and hold the submit button for 10 seconds to view content:</p>
       <p id="challenge"></p>
       <input type="text" id="captchaInput">
       <button id="captchaButton">Submit</button>
+      <div id="countdownBar">
+        <div id="countdownProgress"></div>
+      </div>
     </div>
 
     <div id="contentContainer" style="display: none; text-align: center; padding: 20px;">
@@ -37,17 +59,34 @@
       const operation = Math.floor(Math.random() * 2) == 0 ? "+" : "-";
       challenge.innerHTML = `What is ${num1} ${operation} ${num2}?`;
 
-      const correctAnswer = operation == "+" ? num1 + num2 : num1 - num2;
 
-      document.getElementById("captchaButton").addEventListener("click", function() {
-        const answer = document.getElementById("captchaInput").value;
-        if (answer == correctAnswer) {
-          document.getElementById("captchaContainer").style.display = "none";
-          document.getElementById("contentContainer").style.display = "block";
-        } else {
-          document.getElementById("prompt").innerHTML = "Incorrect answer, please try again.";
-        }
+      const correctAnswer = operation == "+" ? num1 + num2 : num1 - num2;
+      let startTime;
+      let countdownInterval;
+
+      document.getElementById("captchaButton").addEventListener("mousedown", function() {
+        startTime = new Date();
+        countdownInterval = setInterval(function() {
+          const elapsedTime = (new Date() - startTime) / 1000;
+          const progress = elapsedTime / 10;
+          document.getElementById("countdownProgress").style.width = `${progress * 100}%`;
+        }, 100);
       });
-    </script>
+
+      document.getElementById("captchaButton").addEventListener("mouseup", function() {
+        clearInterval(countdownInterval);
+        const answer = document.getElementById("captchaInput").value;
+        const elapsedTime = (new Date() - startTime) / 1000;
+        if (elapsedTime >= 10 && answer == correctAnswer) {
+          document.getElementById("contentContainer").
+style.display = "block";
+document.getElementById("captchaContainer").style.display = "none";
+} else {
+document.getElementById("captchaInput").value = "";
+document.getElementById("countdownProgress").style.width = "0%";
+}
+});
+</script>
+
   </body>
 </html>
